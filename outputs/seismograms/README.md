@@ -1,0 +1,2 @@
+### Output seismogram files location
+
