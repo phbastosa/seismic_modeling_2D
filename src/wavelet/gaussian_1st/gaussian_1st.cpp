@@ -1,8 +1,8 @@
 # include <cmath>
 
-# include "gaussian_2nd.hpp"
+# include "gaussian_1st.hpp"
 
-void Gaussian_2nd::set_parameters(std::string file)
+void Gaussian_1st::set_parameters(std::string file)
 {
     nt = std::stoi(catch_parameter("nt", file));
     dt = std::stof(catch_parameter("dt", file));
@@ -22,7 +22,7 @@ void Gaussian_2nd::set_parameters(std::string file)
         build_amplitudes();
 }
 
-void Gaussian_2nd::build_amplitudes()
+void Gaussian_1st::build_amplitudes()
 {
     int n_freq = 10000;
 
@@ -78,11 +78,17 @@ void Gaussian_2nd::build_amplitudes()
     }
     
     float max = 0.0f;
+    float sum = 0.0f;    
     for (int n = 0; n < nt; n++)
     {  
         for (int w = 0; w < n_freq; w++)
             amp[n] += (input_real[w] * cosf(omega[w] * n) - input_imag[w] * sinf(omega[w] * n)) * dw;
         
+        for (int k = 0; k < n+1; k++)
+            sum += amp[k];
+
+        amp[n] = sum;
+
         if (amp[n] > max) max = amp[n];
     }    
     

@@ -1,9 +1,9 @@
-# ifndef GAUSSIAN_2ND_HPP
-# define GAUSSIAN_2ND_HPP
+# ifndef GAUSSIAN_1ST_HPP
+# define GAUSSIAN_1ST_HPP
 
 # include "../wavelet.hpp"
 
-class Gaussian_2nd : public Wavelet
+class Gaussian_1st : public Wavelet
 {
 public:
 
