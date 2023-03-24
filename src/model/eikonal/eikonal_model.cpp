@@ -25,9 +25,6 @@ void Eikonal_model::set_parameters(std::string file)
     
     expand_boundaries();
 
-    for (int index = 0; index < nPointsB; index++)
-        V[index] = 1.0f / V[index];
-
     delete[] vp;
 }
 
@@ -37,7 +34,7 @@ void Eikonal_model::expand_boundaries()
     {
         for (int j = 0; j < nx; j++)
         {
-            V[(i + nb) + (j + nb)*nzz] = vp[i + j*nz];
+            V[(i + nb) + (j + nb)*nzz] = 1.0f / vp[i + j*nz];
         }
     }
 
@@ -45,8 +42,8 @@ void Eikonal_model::expand_boundaries()
     {
         for (int j = 0; j < nb; j++)
         {
-            V[i + j*nzz] = vp[(i - nb) + 0*nz];
-            V[i + (nxx - j - 1)*nzz] = vp[(i - nb) + (nx - 1)*nz];
+            V[i + j*nzz] = 1.0f / vp[(i - nb) + 0*nz];
+            V[i + (nxx - j - 1)*nzz] = 1.0f / vp[(i - nb) + (nx - 1)*nz];
         }
     }
     
