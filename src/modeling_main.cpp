@@ -3,6 +3,7 @@
 
 # include "modeling/eikonal/eikonal_modeling.hpp"
 # include "modeling/scalar/scalar_modeling.hpp"
+# include "modeling/acoustic/acoustic_modeling.hpp"
 
 int main(int argc, char **argv)
 {
@@ -14,7 +15,7 @@ int main(int argc, char **argv)
     {
         new Eikonal_modeling(),
         new Scalar_modeling(),
-        // new Acoustic_modeling(),
+        new Acoustic_modeling(),
         // new Elastic_modeling()    
     };
     

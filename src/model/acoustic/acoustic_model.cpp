@@ -1,3 +1,5 @@
+# include <cmath>
+
 # include "acoustic_model.hpp"
 
 void Acoustic_model::set_parameters(std::string file)
@@ -19,7 +21,7 @@ void Acoustic_model::set_parameters(std::string file)
     std::string vp_file = catch_parameter("vp_file", file);
     std::string rho_file = catch_parameter("rho_file", file);
 
-    V = new float[nPointsB]();
+    K = new float[nPointsB]();
     B = new float[nPointsB]();
 
     vp = new float[nPoints]();
@@ -40,7 +42,7 @@ void Acoustic_model::expand_boundaries()
     {
         for (int j = 0; j < nx; j++)
         {
-            V[(i + nb) + (j + nb)*nzz] = vp[i + j*nz];
+            K[(i + nb) + (j + nb)*nzz] = rho[i + j*nz] * powf(vp[i + j*nz], 2.0f);
             B[(i + nb) + (j + nb)*nzz] = 1.0f / rho[i + j*nz];
         }
     }
@@ -49,8 +51,8 @@ void Acoustic_model::expand_boundaries()
     {
         for (int j = 0; j < nb; j++)
         {
-            V[i + j*nzz] = vp[(i - nb) + 0*nz];
-            V[i + (nxx - j - 1)*nzz] = vp[(i - nb) + (nx - 1)*nz];
+            K[i + j*nzz] = rho[(i - nb) + 0*nz] * powf(vp[(i - nb) + 0*nz], 2.0f);
+            K[i + (nxx - j - 1)*nzz] = rho[(i - nb) + (nx - 1)*nz] * powf(vp[(i - nb) + (nx - 1)*nz], 2.0f);
 
             B[i + j*nzz] = 1.0f / rho[(i - nb) + 0*nz];
             B[i + (nxx - j - 1)*nzz] = 1.0f / rho[(i - nb) + (nx - 1)*nz];
@@ -61,8 +63,8 @@ void Acoustic_model::expand_boundaries()
     {
         for (int j = 0; j < nxx; j++)
         {
-            V[i + j*nzz] = V[nb + j*nzz];
-            V[(nzz - i - 1) + j*nzz] = V[(nzz - nb - 1) + j*nzz];
+            K[i + j*nzz] = K[nb + j*nzz];
+            K[(nzz - i - 1) + j*nzz] = K[(nzz - nb - 1) + j*nzz];
 
             B[i + j*nzz] = B[nb + j*nzz];
             B[(nzz - i - 1) + j*nzz] = B[(nzz - nb - 1) + j*nzz];

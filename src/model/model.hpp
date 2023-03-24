@@ -21,6 +21,7 @@ public:
 
     float * V = nullptr;
     float * B = nullptr;
+    float * K = nullptr;
     float * M = nullptr;
     float * L = nullptr;
 

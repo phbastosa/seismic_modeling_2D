@@ -13,19 +13,6 @@ vs_file = ../inputs/model/layer_cake_vs_201x2001_10m.bin
 rho_file = ../inputs/model/layer_cake_rho_201x2001_10m.bin
 
 #------------------------------------------
-# Time and frequency parameters
-#------------------------------------------
-
-nt = 1001
-dt = 0.001
-fmax = 45.0
-tlag = 0.15
-gain = 1e6
-
-import_wavelet = False 
-wavelet_file = ../inputs/wavelet/wavelet.bin
-
-#------------------------------------------
 # Geometry types
 #------------------------------------------
 # 0 - Regular style
@@ -67,7 +54,7 @@ n_nodes = 321
 # 3 - elastic 
 #------------------------------------------
 
-modeling_type = 1
+modeling_type = 2
 
 #------------------------------------------
 # Eikonal modeling parameters 
@@ -85,6 +72,15 @@ first_arrivals_folder = ../outputs/first_arrivals/
 
 nb = 100
 damping_factor = 0.0    # Cerjan et al. (1985)
+
+nt = 1001
+dt = 0.001
+fmax = 45.0
+tlag = 0.1
+gain = 1.0
+
+import_wavelet = False 
+wavelet_file = ../inputs/wavelet/wavelet.bin
 
 i_snap = 100
 f_snap = 1000

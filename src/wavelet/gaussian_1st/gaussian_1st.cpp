@@ -75,14 +75,16 @@ void Gaussian_1st::build_amplitudes()
     }
     
     float max = 0.0f;
-    float sum = 0.0f;    
     for (int n = 0; n < nt; n++)
     {  
         for (int w = 0; w < n_freq; w++)
             amp[n] += (input_real[w] * cosf(omega[w] * n) - input_imag[w] * sinf(omega[w] * n)) * dw;
         
-        for (int k = 0; k < n+1; k++)
-            sum += amp[k];
+        aux_amp[n] = amp[n];
+
+        float sum = 0.0f;    
+        for (int k = 0; k < n; k++)
+            sum += aux_amp[k] * dt;
 
         amp[n] = sum;
 
