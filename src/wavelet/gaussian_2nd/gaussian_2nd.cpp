@@ -51,10 +51,7 @@ void Gaussian_2nd::build_amplitudes()
 
     float * input_real = new float[n_freq]();
     float * input_imag = new float[n_freq]();
-
-    float * filter_real = new float[n_freq]();    
-    float * filter_imag = new float[n_freq]();    
-
+    
     for (int n = 0; n < nt; n++)
     {  
         for (int w = 0; w < n_freq; w++)
