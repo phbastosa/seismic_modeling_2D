@@ -1,0 +1,98 @@
+#------------------------------------------
+# Model parameters
+#------------------------------------------
+
+nx = 2001
+nz = 201
+
+dx = 10.0
+dz = 10.0
+
+vp_file = ../inputs/model/layer_cake_vp_201x2001_10m.bin
+vs_file = ../inputs/model/layer_cake_vs_201x2001_10m.bin
+rho_file = ../inputs/model/layer_cake_rho_201x2001_10m.bin
+
+#------------------------------------------
+# Time and frequency parameters
+#------------------------------------------
+
+nt = 1001
+dt = 0.001
+fmax = 45.0
+tlag = 0.15
+gain = 1e6
+
+import_wavelet = False 
+wavelet_file = ../inputs/wavelet/wavelet.bin
+
+#------------------------------------------
+# Geometry types
+#------------------------------------------
+# 0 - Regular style
+# 1 - Streamer style
+#------------------------------------------
+
+geometry_type = 0
+reciprocity = False
+
+#------------------------------------------
+# Regular geometry parameters
+#------------------------------------------
+
+total_shots = 1
+shot_beg_position = [10, 10]  # z,x (m)
+shot_end_position = [10, 10]  # z,x (m)
+
+total_nodes = 397
+node_beg_position = [10, 100]    # z,x (m)
+node_end_position = [10, 19900]   # z,x (m)
+
+#------------------------------------------
+# Streamer geometry parameters 
+#------------------------------------------
+
+offset_min = 100     # (m)
+offset_max = 8100    # (m)
+elevation = 10       # (m)
+d_shots = 100        # (m) 
+n_shots = 50
+n_nodes = 321       
+
+#------------------------------------------
+# Modeling types 
+#------------------------------------------
+# 0 - eikonal  
+# 1 - scalar 
+# 2 - acoustic 
+# 3 - elastic 
+#------------------------------------------
+
+modeling_type = 1
+
+#------------------------------------------
+# Eikonal modeling parameters 
+#------------------------------------------
+
+export_travel_times = True
+export_first_arrivals = True
+
+travel_times_folder = ../outputs/travel_times/
+first_arrivals_folder = ../outputs/first_arrivals/
+
+#------------------------------------------
+# Wave modeling parameters 
+#------------------------------------------
+
+nb = 100
+damping_factor = 0.0    # Cerjan et al. (1985)
+
+i_snap = 100
+f_snap = 1000
+d_snap = 100
+
+export_snapshots = False
+export_seismograms = True
+
+snapshots_folder = ../outputs/snapshots/ 
+seismogram_folder = ../outputs/seismograms/
+
