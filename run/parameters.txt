@@ -19,7 +19,7 @@ rho_file = ../inputs/model/layer_cake_rho_201x2001_10m.bin
 # 1 - Streamer style
 #------------------------------------------
 
-geometry_type = 0
+geometry_type = 1
 reciprocity = False
 
 #------------------------------------------
@@ -39,12 +39,12 @@ node_end_position = [10, 19900]  # z,x (m)
 #------------------------------------------
 
 n_shot = 6
-i_shot = 150  # (m)
-f_shot = 300  # (m)
+i_shot = 8050  # (m)
+f_shot = 8150  # (m)
 
-spread = 11
-offset_min = -25   # (m)
-offset_max = -125  # (m)
+spread = 321
+offset_min = -50    # (m)
+offset_max = -8050  # (m)
 
 s_elev = 10  # (m)
 g_elev = 10  # (m)
@@ -58,7 +58,7 @@ g_elev = 10  # (m)
 # 3 - elastic 
 #------------------------------------------
 
-modeling_type = 0
+modeling_type = 1
 
 #------------------------------------------
 # Eikonal modeling parameters 
