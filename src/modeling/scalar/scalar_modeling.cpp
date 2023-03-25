@@ -242,7 +242,7 @@ void Scalar_modeling::update_wavefield()
 
 void Scalar_modeling::export_outputs()
 {
-    std::string receiver_output_name = receiver_output_folder + "seismogram_scalar_" + std::to_string(total_times) + "x" + std::to_string(total_nodes) + "_shot_" + std::to_string(shot_id+1) + ".bin";
+    std::string receiver_output_name = receiver_output_folder + "seismogram_scalar_" + std::to_string(total_times) + "x" + std::to_string(geometry->fRel[0]) + "_shot_" + std::to_string(shot_id+1) + ".bin";
     std::string wavefield_output_name = wavefield_output_folder + "snapshots_scalar_" + std::to_string(n_snap) + "x" + std::to_string(model->nz) + "x" + std::to_string(model->nx) + "_shot_" + std::to_string(shot_id+1) + ".bin";
     
     if (export_receiver_output) 

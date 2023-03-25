@@ -32,18 +32,22 @@ shot_end_position = [10, 10]  # z,x (m)
 
 total_nodes = 397
 node_beg_position = [10, 100]    # z,x (m)
-node_end_position = [10, 19900]   # z,x (m)
+node_end_position = [10, 19900]  # z,x (m)
 
 #------------------------------------------
 # Streamer geometry parameters 
 #------------------------------------------
 
-offset_min = 100     # (m)
-offset_max = 8100    # (m)
-elevation = 10       # (m)
-d_shots = 100        # (m) 
-n_shots = 50
-n_nodes = 321       
+n_shot = 6
+i_shot = 150  # (m)
+f_shot = 300  # (m)
+
+spread = 11
+offset_min = -25   # (m)
+offset_max = -125  # (m)
+
+s_elev = 10  # (m)
+g_elev = 10  # (m)
 
 #------------------------------------------
 # Modeling types 
@@ -54,14 +58,14 @@ n_nodes = 321
 # 3 - elastic 
 #------------------------------------------
 
-modeling_type = 1
+modeling_type = 0
 
 #------------------------------------------
 # Eikonal modeling parameters 
 #------------------------------------------
 
 export_travel_times = False
-export_first_arrivals = False
+export_first_arrivals = True
 
 travel_times_folder = ../outputs/travel_times/
 first_arrivals_folder = ../outputs/first_arrivals/

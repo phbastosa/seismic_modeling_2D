@@ -18,6 +18,13 @@ public:
 
 class Geometry
 {
+protected:
+
+    void import_geometry();
+    void export_geometry();
+
+    std::vector<float> linspace(float xi, float xf, int n);
+
 public:
 
     int * iRel;
