@@ -3,32 +3,17 @@
 
 # include "eikonal_modeling.hpp"
 
-void Eikonal_modeling::set_parameters(std::string file)
+void Eikonal_modeling::set_parameters()
 {
     model = new Eikonal_model();
 
     model->set_parameters(file);
-
-    Geometry * types[] = 
-    {
-        new Regular(),
-        new Streamer()
-    };
-
-    int geometry_type = std::stoi(catch_parameter("geometry_type", file));
-    
-    geometry = types[geometry_type];
-    
-    geometry->set_parameters(file);
 
     export_receiver_output = str2bool(catch_parameter("export_first_arrivals", file));
     export_wavefield_output = str2bool(catch_parameter("export_travel_times", file));
 
     receiver_output_folder = catch_parameter("first_arrivals_folder", file);
     wavefield_output_folder = catch_parameter("travel_times_folder", file);
-
-    total_nodes = geometry->nodes.total;
-    total_shots = geometry->shots.total;
 }
 
 void Eikonal_modeling::set_components()
@@ -39,27 +24,6 @@ void Eikonal_modeling::set_components()
 
     receiver_output = new float[total_nodes]();
     wavefield_output = new float[model->nPoints]();
-}
-
-void Eikonal_modeling::set_geometry()
-{
-    geometry->shots.idx = new int[total_shots]();
-    geometry->shots.idz = new int[total_shots]();
-
-    for (int i = 0; i < total_shots; i++)
-    {
-        geometry->shots.idx[i] = (int)(geometry->shots.x[i] / model->dx) + model->nb;
-        geometry->shots.idz[i] = (int)(geometry->shots.z[i] / model->dz) + model->nb;
-    }
-
-    geometry->nodes.idx = new int[total_nodes]();
-    geometry->nodes.idz = new int[total_nodes]();
-
-    for (int i = 0; i < total_nodes; i++)
-    {
-        geometry->nodes.idx[i] = (int)(geometry->nodes.x[i] / model->dx) + model->nb;
-        geometry->nodes.idz[i] = (int)(geometry->nodes.z[i] / model->dz) + model->nb;
-    }
 }
 
 void Eikonal_modeling::set_wavefields()
@@ -223,9 +187,17 @@ void Eikonal_modeling::build_outputs()
 {
     if (export_receiver_output)
     {
-        for (int r = 0; r < total_nodes; r++)
-        {
-            receiver_output[r] = T[geometry->nodes.idz[r] + geometry->nodes.idx[r]*model->nzz];
+        int current_node = 0;
+        int iNode = geometry->iRel[shot_id];
+        int fNode = geometry->fRel[shot_id];
+        
+        for (int node = iNode; node < fNode; node++)
+        {    
+            int index = geometry->nodes.idz[node] + geometry->nodes.idx[node] * model->nzz;
+
+            receiver_output[current_node] = T[index];
+
+            current_node += 1;
         }
     }
 

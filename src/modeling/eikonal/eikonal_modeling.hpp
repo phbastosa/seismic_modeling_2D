@@ -21,7 +21,6 @@ private:
 
     float * T = nullptr;
 
-    void set_geometry();
     void build_outputs();
 
     void inner_sweep();
@@ -35,7 +34,7 @@ public:
     void set_wavefields();
     void export_outputs();
 
-    void set_parameters(std::string file);
+    void set_parameters();
 };
 
 # endif

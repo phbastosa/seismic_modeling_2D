@@ -17,6 +17,7 @@ gaussian_1st="../src/wavelet/gaussian_1st/gaussian_1st.cpp"
 gaussian_2nd="../src/wavelet/gaussian_2nd/gaussian_2nd.cpp"
 
 # Modeling
+modeling="../src/modeling/modeling.cpp"
 eikonal_modeling="../src/modeling/eikonal/eikonal_modeling.cpp"
 scalar_modeling="../src/modeling/scalar/scalar_modeling.cpp"
 acoustic_modeling="../src/modeling/acoustic/acoustic_modeling.cpp"
@@ -53,7 +54,7 @@ case "$1" in
     echo -e "Compiling the stand-alone executable!"
 
     echo -e "\n../bin/\033[31mmodeling.exe\033[m \n" 
-    g++ $flags $io $eikonal_model $scalar_model $acoustic_model $elastic_model $gaussian_1st $gaussian_2nd $regular_geom $streamer_geom $eikonal_modeling $scalar_modeling $acoustic_modeling $elastic_modeling $main -o ../bin/modeling.exe
+    g++ $flags $io $eikonal_model $scalar_model $acoustic_model $elastic_model $gaussian_1st $gaussian_2nd $regular_geom $streamer_geom $modeling $eikonal_modeling $scalar_modeling $acoustic_modeling $elastic_modeling $main -o ../bin/modeling.exe
     
 	exit 0
 ;;

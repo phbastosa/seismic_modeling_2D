@@ -1,15 +1,10 @@
-# include <chrono>
-# include <iostream>
-
 # include "modeling/eikonal/eikonal_modeling.hpp"
 # include "modeling/scalar/scalar_modeling.hpp"
 # include "modeling/acoustic/acoustic_modeling.hpp"
 # include "modeling/elastic/elastic_modeling.hpp"
 
 int main(int argc, char **argv)
-{    
-    auto ti = std::chrono::system_clock::now();
-    
+{        
     Modeling * modeling[] = 
     {
         new Eikonal_modeling(),
@@ -18,13 +13,14 @@ int main(int argc, char **argv)
         new Elastic_modeling()    
     };
     
-    std::string file = std::string(argv[1]);
+    int type = std::stoi(catch_parameter("modeling_type", std::string(argv[1])));
 
-    int type = std::stoi(catch_parameter("modeling_type", file));
+    modeling[type]->file = std::string(argv[1]);
 
-    modeling[type]->set_parameters(file);
-
+    modeling[type]->set_parameters();
     modeling[type]->set_components();
+
+    modeling[type]->get_execution_time();
 
     for (int shot = 0; shot < modeling[type]->total_shots; shot++)
     {
@@ -37,11 +33,7 @@ int main(int argc, char **argv)
         modeling[type]->export_outputs();
     }
 
-    auto tf = std::chrono::system_clock::now();
+    modeling[type]->show_execution_time();
 
-    std::chrono::duration<double> elapsed_seconds = tf - ti;
-
-    std::cout<<"\nModeling run time: "<<elapsed_seconds.count()<<" s."<<std::endl;
-    
     return 0;
 }

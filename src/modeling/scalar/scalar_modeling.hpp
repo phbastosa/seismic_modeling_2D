@@ -29,7 +29,6 @@ private:
     float * damp1D = nullptr;
     float * damp2D = nullptr;
 
-    void set_geometry();
     void set_abc_dampers();
 
     void build_outputs();
@@ -45,7 +44,7 @@ public:
     void set_wavefields();
     void export_outputs();
 
-    void set_parameters(std::string file);
+    void set_parameters();
 };
 
 # endif

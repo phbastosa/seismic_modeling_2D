@@ -54,7 +54,7 @@ n_nodes = 321
 # 3 - elastic 
 #------------------------------------------
 
-modeling_type = 0
+modeling_type = 1
 
 #------------------------------------------
 # Eikonal modeling parameters 
@@ -87,7 +87,7 @@ f_snap = 1000
 d_snap = 100
 
 export_snapshots = False
-export_seismograms = False
+export_seismograms = True
 
 snapshots_folder = ../outputs/snapshots/ 
 seismogram_folder = ../outputs/seismograms/

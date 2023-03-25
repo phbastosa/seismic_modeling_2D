@@ -3,25 +3,13 @@
 
 # include "acoustic_modeling.hpp"
 
-void Acoustic_modeling::set_parameters(std::string file)
+void Acoustic_modeling::set_parameters()
 {
     model = new Acoustic_model();
     wavelet = new Gaussian_1st();
 
     model->set_parameters(file);
     wavelet->set_parameters(file);
-
-    Geometry * gtypes[] = 
-    {
-        new Regular(),
-        new Streamer()
-    };
-
-    int geometry_type = std::stoi(catch_parameter("geometry_type", file));
-    
-    geometry = gtypes[geometry_type];
-    
-    geometry->set_parameters(file);
 
     factor = std::stof(catch_parameter("damping_factor", file));
 
@@ -38,8 +26,6 @@ void Acoustic_modeling::set_parameters(std::string file)
     n_snap = (f_snap - i_snap) / d_snap + 1;
 
     total_times = wavelet->nt;
-    total_nodes = geometry->nodes.total;
-    total_shots = geometry->shots.total;
 }
 
 void Acoustic_modeling::set_components()
@@ -53,27 +39,6 @@ void Acoustic_modeling::set_components()
 
     receiver_output = new float[total_times * total_nodes]();
     wavefield_output = new float[n_snap * model->nPoints]();
-}
-
-void Acoustic_modeling::set_geometry()
-{
-    geometry->shots.idx = new int[total_shots]();
-    geometry->shots.idz = new int[total_shots]();
-
-    for (int i = 0; i < total_shots; i++)
-    {
-        geometry->shots.idx[i] = (int)(geometry->shots.x[i] / model->dx) + model->nb;
-        geometry->shots.idz[i] = (int)(geometry->shots.z[i] / model->dz) + model->nb;
-    }
-
-    geometry->nodes.idx = new int[total_nodes]();
-    geometry->nodes.idz = new int[total_nodes]();
-
-    for (int i = 0; i < total_nodes; i++)
-    {
-        geometry->nodes.idx[i] = (int)(geometry->nodes.x[i] / model->dx) + model->nb;
-        geometry->nodes.idz[i] = (int)(geometry->nodes.z[i] / model->dz) + model->nb;
-    }
 }
 
 void Acoustic_modeling::set_abc_dampers()
@@ -259,12 +224,17 @@ void Acoustic_modeling::build_outputs()
 {
     if (export_receiver_output)
     {
-        # pragma omp parallel for
-        for (int node = 0; node < total_nodes; node++)
-        {
+        int current_node = 0;
+        int iNode = geometry->iRel[shot_id];
+        int fNode = geometry->fRel[shot_id];
+        
+        for (int node = iNode; node < fNode; node++)
+        {    
             int index = geometry->nodes.idz[node] + geometry->nodes.idx[node] * model->nzz;
                 
-            receiver_output[time_id +  node * total_times] = P[index];
+            receiver_output[time_id +  current_node * total_times] = P[index];
+
+            current_node += 1;
         }
     }
         
