@@ -54,14 +54,14 @@ n_nodes = 321
 # 3 - elastic 
 #------------------------------------------
 
-modeling_type = 2
+modeling_type = 0
 
 #------------------------------------------
 # Eikonal modeling parameters 
 #------------------------------------------
 
-export_travel_times = True
-export_first_arrivals = True
+export_travel_times = False
+export_first_arrivals = False
 
 travel_times_folder = ../outputs/travel_times/
 first_arrivals_folder = ../outputs/first_arrivals/
@@ -75,8 +75,8 @@ damping_factor = 0.0    # Cerjan et al. (1985)
 
 nt = 1001
 dt = 0.001
-fmax = 45.0
-tlag = 0.1
+fmax = 20.0
+tlag = 0.15
 gain = 1.0
 
 import_wavelet = False 
@@ -87,7 +87,7 @@ f_snap = 1000
 d_snap = 100
 
 export_snapshots = False
-export_seismograms = True
+export_seismograms = False
 
 snapshots_folder = ../outputs/snapshots/ 
 seismogram_folder = ../outputs/seismograms/

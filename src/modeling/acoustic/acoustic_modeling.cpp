@@ -86,7 +86,6 @@ void Acoustic_modeling::set_abc_dampers()
         damp1D[i] = expf(-powf(factor * (model->nb - i), 2.0f));
     }
 
-    /* 2D damp construction */
     for(int i = 0; i < model->nb; i++) 
     {
         for (int j = 0; j < model->nb; j++)
@@ -155,7 +154,8 @@ void Acoustic_modeling::apply_wavelet()
 
 void Acoustic_modeling::kernel_propagation()
 {
-    float damper, dVx_dx, dVz_dz, dP_dx, dP_dz;    
+    float damper, Bx, Bz; 
+    float dVx_dx, dVz_dz, dP_dx, dP_dz;    
 
     # pragma omp parallel for
     for (int index = 0; index < model->nPointsB; index++)
@@ -175,7 +175,7 @@ void Acoustic_modeling::kernel_propagation()
                     8575.0f*(Vx[i + (j-1)*model->nzz] - Vx[i + (j+2)*model->nzz]) +
                   128625.0f*(Vx[i + (j+1)*model->nzz] - Vx[i + j*model->nzz])) / (model->dx*107520.0f);     
 
-            P[index] -= wavelet->dt * model->K[index] * (dVx_dx + dVz_dz);
+            P[index] -= wavelet->dt*model->K[index]*(dVx_dx + dVz_dz);
         }    
     }
 
@@ -192,9 +192,9 @@ void Acoustic_modeling::kernel_propagation()
                    8575.0f*(P[i + (j-2)*model->nzz] - P[i + (j+1)*model->nzz]) +
                  128625.0f*(P[i + j*model->nzz]     - P[i + (j-1)*model->nzz])) / (model->dx*107520.0f);
 
-            float Bx = 0.5f*(model->B[i + (j+1)*model->nzz] + model->B[i + j*model->nzz]);
+            Bx = 0.5f*(model->B[i + (j+1)*model->nzz] + model->B[i + j*model->nzz]);
 
-            Vx[index] -= wavelet->dt * Bx * dP_dx;
+            Vx[index] -= wavelet->dt*Bx*dP_dx;
         }
 
         if ((i >= 4) && (i < model->nzz - 3))
@@ -204,9 +204,9 @@ void Acoustic_modeling::kernel_propagation()
                    8575.0f*(P[(i-2) + j*model->nzz] - P[(i+1) + j*model->nzz]) +
                  128625.0f*(P[i + j*model->nzz]     - P[(i-1) + j*model->nzz])) / (model->dz*107520.0f);
 
-            float Bz = 0.5f*(model->B[(i+1) + j*model->nzz] + model->B[i + j*model->nzz]);
+            Bz = 0.5f*(model->B[(i+1) + j*model->nzz] + model->B[i + j*model->nzz]);
 
-            Vz[index] -= wavelet->dt * Bz * dP_dz;
+            Vz[index] -= wavelet->dt*Bz*dP_dz;
         }
 
         if ((i >= model->nb) && (i < model->nzz - model->nb) && (j >= model->nb) && (j < model->nxx - model->nb))
@@ -215,7 +215,6 @@ void Acoustic_modeling::kernel_propagation()
         }
         else
         {
-            // 1D damping
             if ((i < model->nb) && (j >= model->nb) && (j < model->nxx - model->nb)) 
             {
             damper = damp1D[i];
@@ -232,8 +231,6 @@ void Acoustic_modeling::kernel_propagation()
             {
             damper = damp1D[model->nb - (j - (model->nxx - model->nb)) - 1];
             }
-            
-            // 2D damping 
             else if ((i < model->nb) && (j < model->nb))
             {
                 damper = damp2D[i + j*model->nb];

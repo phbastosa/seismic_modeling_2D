@@ -4,11 +4,10 @@
 # include "modeling/eikonal/eikonal_modeling.hpp"
 # include "modeling/scalar/scalar_modeling.hpp"
 # include "modeling/acoustic/acoustic_modeling.hpp"
+# include "modeling/elastic/elastic_modeling.hpp"
 
 int main(int argc, char **argv)
-{
-    std::chrono::duration<double> elapsed_seconds;
-    
+{    
     auto ti = std::chrono::system_clock::now();
     
     Modeling * modeling[] = 
@@ -16,7 +15,7 @@ int main(int argc, char **argv)
         new Eikonal_modeling(),
         new Scalar_modeling(),
         new Acoustic_modeling(),
-        // new Elastic_modeling()    
+        new Elastic_modeling()    
     };
     
     std::string file = std::string(argv[1]);
@@ -40,7 +39,7 @@ int main(int argc, char **argv)
 
     auto tf = std::chrono::system_clock::now();
 
-    elapsed_seconds = tf - ti;
+    std::chrono::duration<double> elapsed_seconds = tf - ti;
 
     std::cout<<"\nModeling run time: "<<elapsed_seconds.count()<<" s."<<std::endl;
     

@@ -34,12 +34,12 @@ void Gaussian_2nd::build_amplitudes()
 
     float * aux_amp = new float[nt]();
 
-    for (int t = 0; t < nt; t++)
+    for (int n = 0; n < nt; n++)
     {        
-        float aux1 = 1.0f - 2.0f*pi*powf(t*dt - tlag, 2.0f) * powf(fc, 2.0f) * powf(pi, 2.0f);
-        float aux2 = expf(-pi * powf(t*dt - tlag, 2.0f) * powf(fc, 2.0f) * powf(pi, 2.0f));    
+        float aux1 = 1.0f - 2.0f*pi*powf(n*dt - tlag, 2.0f) * powf(fc, 2.0f) * powf(pi, 2.0f);
+        float aux2 = expf(-pi * powf(n*dt - tlag, 2.0f) * powf(fc, 2.0f) * powf(pi, 2.0f));    
         
-        aux_amp[t] = aux1 * aux2;  
+        aux_amp[n] = aux1 * aux2;  
     }
 
     float * omega = new float[n_freq]();
@@ -63,15 +63,18 @@ void Gaussian_2nd::build_amplitudes()
 
     for (int w = 0; w < n_freq; w++)
     {
-        factor_real = 0.5f * sqrtf(2.0f * fabsf(omega[w]));
+        float factor = 0.5f * sqrtf(2.0f * fabsf(omega[w]));
 
-        if (omega[w] < 0.0f)
-            factor_imag =-0.5f * sqrtf(2.0f * fabsf(omega[w]));
+        if (omega[w] < 0)
+        {
+            input_real[w] = factor * (input_real[w] + input_imag[w]);
+            input_imag[w] = factor * (input_real[w] - input_imag[w]);
+        }
         else
-            factor_imag = 0.5f * sqrtf(2.0f * fabsf(omega[w]));
-        
-        input_real[w] = input_real[w] * factor_real - input_imag[w] * factor_imag;
-        input_imag[w] = input_real[w] * factor_real + input_imag[w] * factor_imag;
+        {
+            input_real[w] = factor * (input_real[w] - input_imag[w]);
+            input_imag[w] = factor * (input_real[w] + input_imag[w]);
+        }
     }
     
     float max = 0.0f;

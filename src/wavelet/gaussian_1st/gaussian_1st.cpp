@@ -26,20 +26,23 @@ void Gaussian_1st::build_amplitudes()
 {
     int n_freq = 10000;
 
-    float factor_real;
-    float factor_imag;
-
     float pi = 4.0f * atanf(1.0f);  
     float fc = fmax / (3.0f * sqrtf(pi));
 
     float * aux_amp = new float[nt]();
 
-    for (int t = 0; t < nt; t++)
+    for (int n = 0; n < nt; n++)
     {        
-        float aux1 = 1.0f - 2.0f*pi*powf(t*dt - tlag, 2.0f) * powf(fc, 2.0f) * powf(pi, 2.0f);
-        float aux2 = expf(-pi * powf(t*dt - tlag, 2.0f) * powf(fc, 2.0f) * powf(pi, 2.0f));    
+        float aux1 = 1.0f - 2.0f*pi*powf(n*dt - tlag, 2.0f) * powf(fc, 2.0f) * powf(pi, 2.0f);
+        float aux2 = expf(-pi * powf(n*dt - tlag, 2.0f) * powf(fc, 2.0f) * powf(pi, 2.0f));    
         
-        aux_amp[t] = aux1 * aux2;  
+        amp[n] = aux1 * aux2;  
+    
+        float sum = 0.0f;    
+        for (int k = 0; k < n+1; k++)
+            sum += amp[k];
+
+        aux_amp[n] = sum;
     }
 
     float * omega = new float[n_freq]();
@@ -53,7 +56,9 @@ void Gaussian_1st::build_amplitudes()
     float * input_imag = new float[n_freq]();
 
     for (int n = 0; n < nt; n++)
-    {  
+    {          
+        amp[n] = 0.0f;
+
         for (int w = 0; w < n_freq; w++)
         {
             input_real[w] += aux_amp[n] * cosf(omega[w] * n);
@@ -63,34 +68,29 @@ void Gaussian_1st::build_amplitudes()
 
     for (int w = 0; w < n_freq; w++)
     {
-        factor_real = 0.5f * sqrtf(2.0f * fabsf(omega[w]));
+        float factor = 0.5f * sqrtf(2.0f * fabsf(omega[w]));
 
-        if (omega[w] < 0.0f)
-            factor_imag =-0.5f * sqrtf(2.0f * fabsf(omega[w]));
+        if (omega[w] < 0)
+        {
+            input_real[w] = factor * (input_real[w] + input_imag[w]);
+            input_imag[w] = factor * (input_real[w] - input_imag[w]);
+        }
         else
-            factor_imag = 0.5f * sqrtf(2.0f * fabsf(omega[w]));
-        
-        input_real[w] = input_real[w] * factor_real - input_imag[w] * factor_imag;
-        input_imag[w] = input_real[w] * factor_real + input_imag[w] * factor_imag;
+        {
+            input_real[w] = factor * (input_real[w] - input_imag[w]);
+            input_imag[w] = factor * (input_real[w] + input_imag[w]);
+        }
     }
-    
+
     float max = 0.0f;
     for (int n = 0; n < nt; n++)
     {  
         for (int w = 0; w < n_freq; w++)
             amp[n] += (input_real[w] * cosf(omega[w] * n) - input_imag[w] * sinf(omega[w] * n)) * dw;
         
-        aux_amp[n] = amp[n];
-
-        float sum = 0.0f;    
-        for (int k = 0; k < n; k++)
-            sum += aux_amp[k] * dt;
-
-        amp[n] = sum;
-
         if (amp[n] > max) max = amp[n];
     }    
-    
+
     for (int n = 0; n < nt; n++)
         amp[n] *= gain / max;
 
