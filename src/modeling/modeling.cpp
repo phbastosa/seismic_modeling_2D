@@ -49,3 +49,27 @@ void Modeling::set_geometry()
         geometry->nodes.idz[i] = (int)(geometry->nodes.z[i] / model->dz) + model->nb;
     }
 }
+
+void Modeling::info_message()
+{
+    int result = system("clear");
+    
+    std::cout<<title<<"\n\n";
+    
+    std::cout<<"Total x model length = "<<(model->nx-1)*model->dx<<" m\n";
+    std::cout<<"Total Z model length = "<<(model->nz-1)*model->dz<<" m\n\n";
+    
+    std::cout<<"Shot "<<shot_id+1<<" of "<<total_shots<<"\n\n";
+
+    std::cout<<"Position (z,x) = ("<<geometry->shots.z[shot_id]<<", "<<geometry->shots.x[shot_id]<<") m\n\n";
+}
+
+void Modeling::export_outputs()
+{
+    if (export_receiver_output) 
+        write_binary_float(receiver_output_file, receiver_output, total_nodes);
+    
+    if (export_wavefield_output) 
+        write_binary_float(wavefield_output_file, wavefield_output, model->nPoints);
+}
+

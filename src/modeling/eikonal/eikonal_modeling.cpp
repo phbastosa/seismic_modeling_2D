@@ -9,11 +9,13 @@ void Eikonal_modeling::set_parameters()
 
     model->set_parameters(file);
 
-    export_receiver_output = str2bool(catch_parameter("export_first_arrivals", file));
-    export_wavefield_output = str2bool(catch_parameter("export_travel_times", file));
+    export_receiver_output = str2bool(catch_parameter("export_seismogram", file));
+    export_wavefield_output = str2bool(catch_parameter("export_snapshots", file));
 
-    receiver_output_folder = catch_parameter("first_arrivals_folder", file);
-    wavefield_output_folder = catch_parameter("travel_times_folder", file);
+    receiver_output_folder = catch_parameter("seismogram_folder", file);
+    wavefield_output_folder = catch_parameter("snapshots_folder", file);
+
+    title = "2D eikonal equation solver in scalar acoustic media";
 }
 
 void Eikonal_modeling::set_components()
@@ -38,20 +40,6 @@ void Eikonal_modeling::set_wavefields()
     }
 }
 
-void Eikonal_modeling::info_message()
-{
-    int result = system("clear");
-    
-    std::cout<<"2D eikonal equation solver in scalar acoustic media\n\n";
-    
-    std::cout<<"Total x model length = "<<(model->nx-1)*model->dx<<" m\n";
-    std::cout<<"Total Z model length = "<<(model->nz-1)*model->dz<<" m\n\n";
-    
-    std::cout<<"Shot "<<shot_id+1<<" of "<<total_shots<<"\n\n";
-
-    std::cout<<"Position (z,x) = ("<<geometry->shots.z[shot_id]<<", "<<geometry->shots.x[shot_id]<<") m\n\n";
-}
-
 void Eikonal_modeling::propagation()
 {
     info_message();
@@ -59,6 +47,9 @@ void Eikonal_modeling::propagation()
     kernel_propagation();
 
     build_outputs();
+
+    receiver_output_file = receiver_output_folder + "seismogram_eikonal_" + std::to_string(geometry->fRel[0]) + "_shot_" + std::to_string(shot_id+1) + ".bin";
+    wavefield_output_file = wavefield_output_folder + "snapshots_eikonal_" + std::to_string(model->nz) + "x" + std::to_string(model->nx) + "_shot_" + std::to_string(shot_id+1) + ".bin";
 }
 
 void Eikonal_modeling::kernel_propagation()
@@ -213,17 +204,6 @@ void Eikonal_modeling::build_outputs()
     }
 }
 
-void Eikonal_modeling::export_outputs()
-{
-    std::string receiver_output_name = receiver_output_folder + "first_arrivals_" + std::to_string(geometry->fRel[0]) + "_shot_" + std::to_string(shot_id+1) + ".bin";
-    std::string wavefield_output_name = wavefield_output_folder + "travel_time_" + std::to_string(model->nz) + "x" + std::to_string(model->nx) + "_shot_" + std::to_string(shot_id+1) + ".bin";
-
-    if (export_receiver_output) 
-        write_binary_float(receiver_output_name, receiver_output, total_nodes);
-    
-    if (export_wavefield_output) 
-        write_binary_float(wavefield_output_name, wavefield_output, model->nPoints);
-}
 
 
 

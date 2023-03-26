@@ -21,19 +21,15 @@ private:
 
     float * T = nullptr;
 
-    void build_outputs();
-
     void inner_sweep();
+    void build_outputs();
     void kernel_propagation();
 
 public:
 
     void propagation();
-    void info_message();
     void set_components();
     void set_wavefields();
-    void export_outputs();
-
     void set_parameters();
 };
 

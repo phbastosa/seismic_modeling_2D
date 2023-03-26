@@ -38,10 +38,8 @@ private:
 public:
 
     void propagation();
-    void info_message();
     void set_components();
     void set_wavefields();
-    void export_outputs();
 
     void set_parameters();
 };

@@ -26,6 +26,8 @@ void Elastic_modeling::set_parameters()
     n_snap = (f_snap - i_snap) / d_snap + 1;
 
     total_times = wavelet->nt;
+
+    title = "2D wave propagation in elastic media";
 }
 
 void Elastic_modeling::set_components()
@@ -78,25 +80,6 @@ void Elastic_modeling::set_wavefields()
     }
 }
 
-void Elastic_modeling::info_message()
-{
-    if (time_id % (total_times / 100) == 0)
-    {
-        int result = system("clear");
-        
-        std::cout<<"2D wave propagation in elastic media\n\n";
-        
-        std::cout<<"Total x model length = "<<(model->nx-1)*model->dx<<" m\n";
-        std::cout<<"Total Z model length = "<<(model->nz-1)*model->dz<<" m\n\n";
-        
-        std::cout<<"Shot "<<shot_id+1<<" of "<<total_shots<<"\n\n";
-
-        std::cout<<"Position (z,x) = ("<<geometry->shots.z[shot_id]<<", "<<geometry->shots.x[shot_id]<<") m\n\n";
-
-        std::cout<<"Modeling progression: "<< 100.0f *((float)(time_id+1) / (float)(total_times)) <<" %\n\n";    
-    }
-}
-
 void Elastic_modeling::propagation()
 {
     snap_id = 0;
@@ -105,13 +88,18 @@ void Elastic_modeling::propagation()
     {
         time_id = time;
 
-        info_message();
+        if (time_id % (total_times / 10) == 0)
+            info_message();
+        
         apply_wavelet();
 
         kernel_propagation();        
         
         build_outputs();
     }
+
+    receiver_output_file = receiver_output_folder + "seismogram_elastic_" + std::to_string(total_times) + "x" + std::to_string(geometry->fRel[0]) + "_shot_" + std::to_string(shot_id+1) + ".bin";
+    wavefield_output_file = wavefield_output_folder + "snapshots_elastic_" + std::to_string(n_snap) + "x" + std::to_string(model->nz) + "x" + std::to_string(model->nx) + "_shot_" + std::to_string(shot_id+1) + ".bin";
 }
 
 void Elastic_modeling::apply_wavelet()
@@ -296,18 +284,6 @@ void Elastic_modeling::build_outputs()
             }
         }
     }
-}
-
-void Elastic_modeling::export_outputs()
-{
-    std::string receiver_output_name = receiver_output_folder + "seismogram_elastic_" + std::to_string(total_times) + "x" + std::to_string(geometry->fRel[0]) + "_shot_" + std::to_string(shot_id+1) + ".bin";
-    std::string wavefield_output_name = wavefield_output_folder + "snapshots_elastic_" + std::to_string(n_snap) + "x" + std::to_string(model->nz) + "x" + std::to_string(model->nx) + "_shot_" + std::to_string(shot_id+1) + ".bin";
-    
-    if (export_receiver_output) 
-        write_binary_float(receiver_output_name, receiver_output, total_times * total_nodes);
-    
-    if (export_wavefield_output) 
-        write_binary_float(wavefield_output_name, wavefield_output, n_snap * model->nPoints);
 }
 
 

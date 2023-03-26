@@ -58,21 +58,7 @@ g_elev = 10  # (m)
 # 3 - elastic 
 #------------------------------------------
 
-modeling_type = 1
-
-#------------------------------------------
-# Eikonal modeling parameters 
-#------------------------------------------
-
-export_travel_times = False
-export_first_arrivals = True
-
-travel_times_folder = ../outputs/travel_times/
-first_arrivals_folder = ../outputs/first_arrivals/
-
-#------------------------------------------
-# Wave modeling parameters 
-#------------------------------------------
+modeling_type = 0
 
 nb = 100
 damping_factor = 0.0    # Cerjan et al. (1985)

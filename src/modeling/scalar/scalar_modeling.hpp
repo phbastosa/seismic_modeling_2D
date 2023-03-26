@@ -29,21 +29,17 @@ private:
     float * damp1D = nullptr;
     float * damp2D = nullptr;
 
-    void set_abc_dampers();
-
     void build_outputs();
     void apply_wavelet();
+    void set_abc_dampers();
     void update_wavefield();
     void kernel_propagation();
 
 public:
 
     void propagation();
-    void info_message();
     void set_components();
     void set_wavefields();
-    void export_outputs();
-
     void set_parameters();
 };
 
