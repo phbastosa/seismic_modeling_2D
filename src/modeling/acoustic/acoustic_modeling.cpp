@@ -27,7 +27,7 @@ void Acoustic_modeling::set_parameters()
 
     total_times = wavelet->nt;
 
-    title = "2D wave propagation in P-V acoustic media";
+    title = "2D wave propagation in \033[32mP-V acoustic\033[0;0m media";
 }
 
 void Acoustic_modeling::set_components()
@@ -39,8 +39,11 @@ void Acoustic_modeling::set_components()
     Vx = new float[model->nPointsB]();
     Vz = new float[model->nPointsB]();
 
-    receiver_output = new float[total_times * total_nodes]();
-    wavefield_output = new float[n_snap * model->nPoints]();
+    receiver_output_samples = total_times * total_nodes;
+    wavefield_output_samples = n_snap * model->nPoints; 
+
+    receiver_output = new float[receiver_output_samples]();
+    wavefield_output = new float[wavefield_output_samples]();
 }
 
 void Acoustic_modeling::set_abc_dampers()
@@ -85,7 +88,10 @@ void Acoustic_modeling::propagation()
         time_id = time;
 
         if (time_id % (total_times / 10) == 0)
+        {
             info_message();
+            std::cout<<"Progress: " <<(int)((float)(time_id + 1) / (float)(total_times) * 100.0f)<<" %\n\n";
+        }
         
         apply_wavelet();
 

@@ -15,7 +15,7 @@ void Eikonal_modeling::set_parameters()
     receiver_output_folder = catch_parameter("seismogram_folder", file);
     wavefield_output_folder = catch_parameter("snapshots_folder", file);
 
-    title = "2D eikonal equation solver in scalar acoustic media";
+    title = "2D \033[32meikonal\033[0;0m equation solver in scalar acoustic media";
 }
 
 void Eikonal_modeling::set_components()
@@ -24,8 +24,11 @@ void Eikonal_modeling::set_components()
 
     T = new float[model->nPointsB]();
 
-    receiver_output = new float[total_nodes]();
-    wavefield_output = new float[model->nPoints]();
+    receiver_output_samples = total_nodes;
+    wavefield_output_samples = model->nPoints;
+
+    receiver_output = new float[receiver_output_samples]();
+    wavefield_output = new float[wavefield_output_samples]();
 }
 
 void Eikonal_modeling::set_wavefields()
@@ -49,7 +52,7 @@ void Eikonal_modeling::propagation()
     build_outputs();
 
     receiver_output_file = receiver_output_folder + "seismogram_eikonal_" + std::to_string(geometry->fRel[0]) + "_shot_" + std::to_string(shot_id+1) + ".bin";
-    wavefield_output_file = wavefield_output_folder + "snapshots_eikonal_" + std::to_string(model->nz) + "x" + std::to_string(model->nx) + "_shot_" + std::to_string(shot_id+1) + ".bin";
+    wavefield_output_file = wavefield_output_folder + "snapshots_eikonal_" + std::to_string(model->nz) + "x" + std::to_string(model->nx) + "_shot_" + std::to_string(shot_id+1) + ".bin"; 
 }
 
 void Eikonal_modeling::kernel_propagation()

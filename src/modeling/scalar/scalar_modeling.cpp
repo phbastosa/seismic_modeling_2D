@@ -27,7 +27,7 @@ void Scalar_modeling::set_parameters()
 
     total_times = wavelet->nt;
 
-    title = "2D wave propagation in scalar acoustic media";
+    title = "2D wave propagation in \033[32mscalar\033[0;0m acoustic media";
 }
 
 void Scalar_modeling::set_components()
@@ -39,8 +39,11 @@ void Scalar_modeling::set_components()
     U_pre = new float[model->nPointsB]();
     U_fut = new float[model->nPointsB]();
 
-    receiver_output = new float[total_times * total_nodes]();
-    wavefield_output = new float[n_snap * model->nPoints]();
+    receiver_output_samples = total_times * total_nodes;
+    wavefield_output_samples = n_snap * model->nPoints; 
+
+    receiver_output = new float[receiver_output_samples]();
+    wavefield_output = new float[wavefield_output_samples]();
 }
 
 void Scalar_modeling::set_abc_dampers()
@@ -86,8 +89,11 @@ void Scalar_modeling::propagation()
         time_id = time;
         
         if (time_id % (total_times / 10) == 0)
+        {
             info_message();
-        
+            std::cout<<"Progress: " <<(int)((float)(time_id + 1) / (float)(total_times) * 100.0f)<<" %\n\n";
+        }
+
         apply_wavelet();
 
         kernel_propagation();        
@@ -118,8 +124,6 @@ void Scalar_modeling::kernel_propagation()
         int i = (int)(index % model->nzz);
         int j = (int)(index / model->nzz);
 
-        damper = 1.0f;
-
         if ((i >= 4) && (i < model->nzz - 4) && (j >= 4) && (j < model->nxx - 4))
         {
             d2U_dx2 = (- 9.0f*(U_pre[i + (j-4)*model->nzz] + U_pre[i + (j+4)*model->nzz])
@@ -136,40 +140,44 @@ void Scalar_modeling::kernel_propagation()
 
             U_fut[index] = powf(wavelet->dt, 2.0f)*powf(model->V[index],2.0f) * (d2U_dx2 + d2U_dz2) + 2.0f*U_pre[index] - U_pas[index];
 
-            // 1D damping
-            if ((i < model->nb) && (j >= model->nb) && (j < model->nxx - model->nb)) 
+            if ((i >= model->nb) && (i < model->nzz - model->nb) && (j >= model->nb) && (j < model->nxx - model->nb))
             {
+                damper = 1.0f;
+            }
+            else
+            {
+                if ((i < model->nb) && (j >= model->nb) && (j < model->nxx - model->nb)) 
+                {
                 damper = damp1D[i];
-            }         
-            else if ((i >= model->nzz - model->nb) && (j >= model->nb) && (j < model->nxx - model->nb)) 
-            {
-                damper = damp1D[model->nb - (i - (model->nzz - model->nb)) - 1];
-            }         
-            else if ((i >= model->nb) && (i < model->nzz - model->nb) && (j < model->nb))
-            {
-                damper = damp1D[j];
-            }
-            else if ((i >= model->nb) && (i < model->nzz - model->nb) && (j >= model->nxx - model->nb))
-            {
-               damper = damp1D[model->nb - (j - (model->nxx - model->nb)) - 1];
-            }
-            
-            // 2D damping 
-            else if ((i < model->nb) && (j < model->nb))
-            {
-                damper = damp2D[i + j*model->nb];
-            }
-            else if ((i < model->nb) && (j >= model->nxx - model->nb))
-            {
-                damper = damp2D[i + (model->nb - (j - (model->nxx - model->nb)) - 1)*model->nb];
-            }            
-            else if ((i >= model->nzz - model->nb) && (j < model->nb))
-            {
-                damper = damp2D[(model->nb - (i - (model->nzz - model->nb)) - 1) + j*model->nb];
-            }    
-            else if ((i >= model->nzz - model->nb) && (j >= model->nxx - model->nb))
-            {
-                damper = damp2D[(model->nb - (i - (model->nzz - model->nb)) - 1) + (model->nb - (j - (model->nxx - model->nb)) - 1)*model->nb];
+                }         
+                else if ((i >= model->nzz - model->nb) && (j >= model->nb) && (j < model->nxx - model->nb)) 
+                {
+                    damper = damp1D[model->nb - (i - (model->nzz - model->nb)) - 1];
+                }         
+                else if ((i >= model->nb) && (i < model->nzz - model->nb) && (j < model->nb))
+                {
+                    damper = damp1D[j];
+                }
+                else if ((i >= model->nb) && (i < model->nzz - model->nb) && (j >= model->nxx - model->nb))
+                {
+                damper = damp1D[model->nb - (j - (model->nxx - model->nb)) - 1];
+                }
+                else if ((i < model->nb) && (j < model->nb))
+                {
+                    damper = damp2D[i + j*model->nb];
+                }
+                else if ((i < model->nb) && (j >= model->nxx - model->nb))
+                {
+                    damper = damp2D[i + (model->nb - (j - (model->nxx - model->nb)) - 1)*model->nb];
+                }            
+                else if ((i >= model->nzz - model->nb) && (j < model->nb))
+                {
+                    damper = damp2D[(model->nb - (i - (model->nzz - model->nb)) - 1) + j*model->nb];
+                }    
+                else if ((i >= model->nzz - model->nb) && (j >= model->nxx - model->nb))
+                {
+                    damper = damp2D[(model->nb - (i - (model->nzz - model->nb)) - 1) + (model->nb - (j - (model->nxx - model->nb)) - 1)*model->nb];
+                }
             }
 
             U_pas[index] *= damper;
@@ -196,7 +204,7 @@ void Scalar_modeling::build_outputs()
             current_node += 1;
         }
     }
-        
+    
     if (export_wavefield_output)
     {
         if (time_id % d_snap == 0)

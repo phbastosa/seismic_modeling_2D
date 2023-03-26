@@ -27,7 +27,7 @@ void Elastic_modeling::set_parameters()
 
     total_times = wavelet->nt;
 
-    title = "2D wave propagation in elastic media";
+    title = "2D wave propagation in \033[32melastic\033[0;0m media";
 }
 
 void Elastic_modeling::set_components()
@@ -41,8 +41,11 @@ void Elastic_modeling::set_components()
     Tzz = new float[model->nPointsB]();
     Txz = new float[model->nPointsB]();
 
-    receiver_output = new float[total_times * total_nodes]();
-    wavefield_output = new float[n_snap * model->nPoints]();
+    receiver_output_samples = total_times * total_nodes;
+    wavefield_output_samples = n_snap * model->nPoints; 
+
+    receiver_output = new float[receiver_output_samples]();
+    wavefield_output = new float[wavefield_output_samples]();
 }
 
 void Elastic_modeling::set_abc_dampers()
@@ -89,7 +92,10 @@ void Elastic_modeling::propagation()
         time_id = time;
 
         if (time_id % (total_times / 10) == 0)
+        {
             info_message();
+            std::cout<<"Progress: " <<(int)((float)(time_id + 1) / (float)(total_times) * 100.0f)<<" %\n\n";
+        }
         
         apply_wavelet();
 
@@ -100,6 +106,9 @@ void Elastic_modeling::propagation()
 
     receiver_output_file = receiver_output_folder + "seismogram_elastic_" + std::to_string(total_times) + "x" + std::to_string(geometry->fRel[0]) + "_shot_" + std::to_string(shot_id+1) + ".bin";
     wavefield_output_file = wavefield_output_folder + "snapshots_elastic_" + std::to_string(n_snap) + "x" + std::to_string(model->nz) + "x" + std::to_string(model->nx) + "_shot_" + std::to_string(shot_id+1) + ".bin";
+
+    receiver_output_samples = total_times * total_nodes;
+    wavefield_output_samples = n_snap * model->nPoints; 
 }
 
 void Elastic_modeling::apply_wavelet()

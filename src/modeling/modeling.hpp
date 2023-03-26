@@ -14,10 +14,16 @@
 
 class Modeling
 {
+private:
+
+    std::chrono::_V2::system_clock::time_point ti;
+
 protected:
 
     std::string title;
-    std::chrono::_V2::system_clock::time_point ti;
+
+    int receiver_output_samples;
+    int wavefield_output_samples;
 
     bool export_receiver_output;
     bool export_wavefield_output;    

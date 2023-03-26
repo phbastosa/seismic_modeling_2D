@@ -19,7 +19,7 @@ rho_file = ../inputs/model/layer_cake_rho_201x2001_10m.bin
 # 1 - Streamer style
 #------------------------------------------
 
-geometry_type = 1
+geometry_type = 0
 reciprocity = False
 
 #------------------------------------------
@@ -58,14 +58,14 @@ g_elev = 10  # (m)
 # 3 - elastic 
 #------------------------------------------
 
-modeling_type = 0
+modeling_type = 1
 
 nb = 100
 damping_factor = 0.0    # Cerjan et al. (1985)
 
 nt = 1001
 dt = 0.001
-fmax = 20.0
+fmax = 30.0
 tlag = 0.15
 gain = 1.0
 
@@ -76,7 +76,7 @@ i_snap = 100
 f_snap = 1000
 d_snap = 100
 
-export_snapshots = False
+export_snapshots = True
 export_seismograms = True
 
 snapshots_folder = ../outputs/snapshots/ 

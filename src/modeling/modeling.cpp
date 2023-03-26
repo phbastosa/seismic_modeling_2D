@@ -67,9 +67,8 @@ void Modeling::info_message()
 void Modeling::export_outputs()
 {
     if (export_receiver_output) 
-        write_binary_float(receiver_output_file, receiver_output, total_nodes);
+        write_binary_float(receiver_output_file, receiver_output, receiver_output_samples);
     
     if (export_wavefield_output) 
-        write_binary_float(wavefield_output_file, wavefield_output, model->nPoints);
+        write_binary_float(wavefield_output_file, wavefield_output, wavefield_output_samples);
 }
-
