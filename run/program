@@ -26,9 +26,12 @@ flags="-fopenmp -lm -O3"
 
 USER_MESSAGE="
 Usage:
-    $ $0 -help       
-    $ $0 -compile            
-    $ $0 -run         
+    $ $0 -help       # to see the keys allowed
+    $ $0 -model      # to build a layer cake model 
+    $ $0 -compile    # to compile all programs          
+    $ $0 -run        # to run seismic modeling 
+
+Please, follow the expecifications from parameters.txt file    
 "
 # Check if user provide some parameter
 [ -z "$1" ] && {
@@ -43,6 +46,13 @@ case "$1" in
 
 -help ) 
 	echo -e "$USER_MESSAGE"
+	exit 0
+;;
+
+-model) 
+
+    python3 ../src/utils/py_codes/build_model.py parameters.txt
+
 	exit 0
 ;;
 

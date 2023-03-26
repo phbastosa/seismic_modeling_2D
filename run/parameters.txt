@@ -13,6 +13,15 @@ vs_file = ../inputs/model/layer_cake_vs_201x2001_10m.bin
 rho_file = ../inputs/model/layer_cake_rho_201x2001_10m.bin
 
 #------------------------------------------
+# Build a layer cake Model
+#------------------------------------------
+
+z =   [  500,  800, 1100, 1400, 1700 ]        # Interfaces (m)
+vp =  [ 1500, 1650, 1800, 2000, 2200, 2500 ]  # P wave velocity (m/s)
+vs =  [    0,  970, 1060, 1180, 1290, 1470 ]  # S wave velocity (m/s)
+rho = [ 1000, 1975, 2000, 2070, 2100, 2150 ]  # Density (kg/m³)
+
+#------------------------------------------
 # Geometry types
 #------------------------------------------
 # 0 - Regular style
@@ -58,7 +67,7 @@ g_elev = 10  # (m)
 # 3 - elastic 
 #------------------------------------------
 
-modeling_type = 1
+modeling_type = 3
 
 nb = 100
 damping_factor = 0.0    # Cerjan et al. (1985)
