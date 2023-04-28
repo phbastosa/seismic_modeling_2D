@@ -2,15 +2,15 @@
 # Model parameters
 #------------------------------------------
 
-nx = 2001
-nz = 201
+nx = 1001
+nz = 1001
 
 dx = 10.0
 dz = 10.0
 
-vp_file = ../inputs/model/layer_cake_vp_201x2001_10m.bin
-vs_file = ../inputs/model/layer_cake_vs_201x2001_10m.bin
-rho_file = ../inputs/model/layer_cake_rho_201x2001_10m.bin
+vp_file = ../inputs/model/layer_cake_vp_201x1001_10m.bin
+vs_file = ../inputs/model/layer_cake_vs_201x1001_10m.bin
+rho_file = ../inputs/model/layer_cake_rho_201x1001_10m.bin
 
 #------------------------------------------
 # Build a layer cake Model
@@ -36,12 +36,12 @@ reciprocity = False
 #------------------------------------------
 
 total_shots = 1
-shot_beg_position = [10, 10]  # z,x (m)
-shot_end_position = [10, 10]  # z,x (m)
+shot_beg_position = [10, 9990]  # z,x (m)
+shot_end_position = [10, 9990]  # z,x (m)
 
-total_nodes = 397
+total_nodes = 197
 node_beg_position = [10, 100]    # z,x (m)
-node_end_position = [10, 19900]  # z,x (m)
+node_end_position = [10, 9900]  # z,x (m)
 
 #------------------------------------------
 # Streamer geometry parameters 

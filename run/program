@@ -22,7 +22,7 @@ elastic_modeling="../src/modeling/elastic/elastic_modeling.cpp"
 
 main="../src/modeling_main.cpp"
 
-flags="-fopenmp -lm -O3"
+flags="-fopenmp -ffast-math -lm -O4"
 
 USER_MESSAGE="
 Usage:
